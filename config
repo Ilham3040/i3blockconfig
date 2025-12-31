@@ -1,5 +1,9 @@
+separator=true
+separator_block_width=40
+
+
 [battery]
-command=sh -c 'status=$(cat /sys/class/power_supply/BAT0/status); percent=$(($(cat /sys/class/power_supply/BAT0/energy_now)*100/$(cat /sys/class/power_supply/BAT0/energy_full))); echo "$status $percent%"'
+command=sh -c 'percent=$(($(cat /sys/class/power_supply/BAT0/energy_now)*100/$(cat /sys/class/power_supply/BAT0/energy_full))); echo " Battery  $percent%"'
 interval=30
 
 [cpu]
@@ -11,24 +15,34 @@ interval=2
 command=sh -c 'if [ -f /sys/class/drm/card0/device/gpu_busy_percent ]; then gpu=$(cat /sys/class/drm/card0/device/gpu_busy_percent); echo "GPU ${gpu}%"; else echo "GPU N/A"; fi'
 interval=2
 
-[memory]
-command=sh -c 'used=$(free -h | awk "/^Mem/ {print \$3}"); total=$(free -h | awk "/^Mem/ {print \$2}"); echo "RAM $used/$total"'
-interval=5
+# [memory]
+# command=sh -c 'used=$(free -h | awk "/^Mem/ {print \$3}"); total=$(free -h | awk "/^Mem/ {print \$2}"); echo "RAM $used/$total"'
+# interval=5
 
-[wifi]
-command=sh -c 'iface=$(iw dev | awk "/Interface/ {print $2}" | head -n1); rx=$(cat /sys/class/net/$iface/statistics/rx_bytes); tx=$(cat /sys/class/net/$iface/statistics/tx_bytes); sleep 1; rx2=$(cat /sys/class/net/$iface/statistics/rx_bytes); tx2=$(cat /sys/class/net/$iface/statistics/tx_bytes); rx_speed=$(( (rx2-rx)/1024 )) ; tx_speed=$(( (tx2-tx)/1024 )); echo "WiFi ↓${rx_speed}KB/s ↑${tx_speed}KB/s"'
-interval=5
+# [wifi]
+# command=sh -c 'iface=$(iw dev | awk "/Interface/ {print $2}" | head -n1); rx=$(cat /sys/class/net/$iface/statistics/rx_bytes); tx=$(cat /sys/class/net/$iface/statistics/tx_bytes); sleep 1; rx2=$(cat /sys/class/net/$iface/statistics/rx_bytes); tx2=$(cat /sys/class/net/$iface/statistics/tx_bytes); rx_speed=$(( (rx2-rx)/1024 )) ; tx_speed=$(( (tx2-tx)/1024 )); echo "WiFi ↓${rx_speed}KB/s ↑${tx_speed}KB/s"'
+# interval=5
 
 ## sudo apt install lm-sensors
 [power_draw]
-command=sh -c 'power=$(sensors | grep "power1" | awk "{print \$2}"); echo "Power $power W"'
+command=sh -c 'power=$(sensors | grep "power1" | awk "{print \$2}"); echo "$power W"'
 interval=2
 
-[volume]
-command=sh -c 'vol=$(amixer get Master | grep -o "[0-9]*%" | head -n1); echo "Vol $vol"'
-interval=2
+# [volume]
+# command=sh -c 'vol=$(amixer get Master | grep -o "[0-9]*%" | head -n1); echo "Vol $vol"'
+# interval=2
 
 
-[plugged_in]
-command=sh -c 'status=$(cat /sys/class/power_supply/AC/online); if [ "$status" -eq 1 ]; then echo "Plugged ⚡"; else echo "On Battery"; fi'
-interval=10
+# [plugged_in]
+# command=sh -c 'status=$(cat /sys/class/power_supply/AC/online); if [ "$status" -eq 1 ]; then echo "Plugged"; else echo "On Battery"; fi'
+# interval=10
+
+
+[time]
+command=sh -c 'date "+%H:%M:%S"'
+interval=1
+
+[time]
+command=sh -c 'date "+%A  %d-%m-%Y"'
+interval=1
+
